@@ -35,6 +35,7 @@ async function run(){
         const result=await inventoryCollection.insertOne(newInventories)
         res.send(result)
     })
+    
     app.delete('/inventories/:id',async(req,res)=>{
         const id=req.params.id
         const query={_id:ObjectId(id)}
@@ -43,6 +44,26 @@ async function run(){
 
 
     })
+    app.put('/inventories/:id',async(req,res)=>{
+        const id=req.params.id
+        const newStock=req.body;
+
+        const query={_id:ObjectId(id)}
+        const option={upsert:true}
+        const updateDoc={
+            $set:{
+               stock:newStock.stock
+            }
+            
+            
+    }
+   
+    const result=await inventoryCollection.updateOne(query,updateDoc,option)
+       res.send(result);
+
+ })
+  
+
  }
  finally{
    
