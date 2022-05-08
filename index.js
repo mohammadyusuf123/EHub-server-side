@@ -2,6 +2,7 @@ const express = require('express');
 const app=express()
 const cors = require('cors');
 const port=process.env.PORT||2000
+const jwt = require('jsonwebtoken');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 
@@ -67,10 +68,28 @@ async function run(){
   
 //Order Collection API
 
+ app.get('/order',async(req,res)=>{
+     const email=req.query.email
+     const query={email:email}
+     const cursor=orderCollection.find(query)
+     const order=await cursor.toArray()
+     res.send(order)
+ })
+
+
 app.post('/order',async(req,res)=>{
     const order=req.body
     const result= await orderCollection.insertOne(order)
     res.send(result)
+  })
+
+  //Auth
+app.post('/login',async(req,res)=>{
+    const user=req.body
+    const accessKey=jwt.sign(user,process.env.ACCESS_KEY,{
+      expiresIn:'1d'
+    })
+    res.send(accessKey)
   })
 
  }
