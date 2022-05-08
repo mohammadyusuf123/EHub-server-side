@@ -17,6 +17,7 @@ async function run(){
  try{
     await client.connect();
     const inventoryCollection=client.db('assignment-11').collection('inventories')
+    const orderCollection=client.db('assignment-11').collection('orders')
     app.get('/inventories',async(req,res)=>{
         const query={}
         const cursor=inventoryCollection.find(query)
@@ -44,6 +45,7 @@ async function run(){
 
 
     })
+    //Update API
     app.put('/inventories/:id',async(req,res)=>{
         const id=req.params.id
         const newStock=req.body;
@@ -63,6 +65,13 @@ async function run(){
 
  })
   
+//Order Collection API
+
+app.post('/order',async(req,res)=>{
+    const order=req.body
+    const result= await orderCollection.insertOne(order)
+    res.send(result)
+  })
 
  }
  finally{
